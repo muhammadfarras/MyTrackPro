@@ -6,13 +6,38 @@
     android:layout_height="match_parent"
     tools:context=".OpeningActivity">
 
-    <TextView
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/opening_animation_view"
+        app:lottie_rawRes="@raw/opening"
+        android:padding="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+
+        app:lottie_autoPlay="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:fontFamily="@font/quicksand_bold"
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textSize="37sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:fontFamily="@font/quicksand_medium"
+        android:textAlignment="center"
+        android:layout_marginBottom="60dp"
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/developer"
+        app:layout_constraintBottom_toBottomOf="@+id/opening_animation_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>
