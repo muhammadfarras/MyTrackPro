@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:padding="40dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:scrollbarSize="24sp"
+        android:text="@string/costumer_name"
+        android:fontFamily="@font/quicksand_regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:ems="10"
+        android:id="@+id/costumer_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:scrollbarSize="24sp"
+        android:text="@string/costumer_phone_number"
+        android:fontFamily="@font/quicksand_regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:ems="10"
+        android:inputType="phone"
+        android:id="@+id/costumerPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:scrollbarSize="24sp"
+        android:text="@string/costumer_phone_type"
+        android:fontFamily="@font/quicksand_regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:ems="10"
+        android:id="@+id/costumerTypePhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:scrollbarSize="24sp"
+        android:text="@string/costumer_price"
+        android:fontFamily="@font/quicksand_regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/costumerPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+
+</LinearLayout>
