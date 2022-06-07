@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MyTrackPro</string>
     <string name="developer" translatable="false">Muhammad Farras Ma\'ruf</string>
+    <string name="costumer_name">Costumer Name</string>
+    <string name="costumer_phone_number">Costumer Phone Number</string>
+    <string name="costumer_phone_type">Costumer Phone Type</string>
+    <string name="costumer_price">Price</string>
 </resources>
