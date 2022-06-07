@@ -10,9 +10,13 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.farras.mytrackpro.databinding.ActivityMainBinding
 import com.farras.mytrackpro.models.Costumers
 import com.farras.mytrackpro.models.Posted
@@ -33,6 +37,9 @@ import com.google.firebase.ktx.Firebase
 
 private lateinit var binding: ActivityMainBinding
 private lateinit var database: DatabaseReference
+var isFabOpen: Boolean = false
+var isBackClick: Boolean = false
+const val DURATION_OF_ME = 300
 
 class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +55,17 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         var mutableList = mutableMapOf<String, Costumers>()
 
 
-        binding.fabAddCostumers.setOnClickListener {
-            val view = layoutInflater.inflate(R.layout.add_costumers_modal,null)
+        binding.fabMenus.setOnClickListener {
+            if (!isFabOpen){
+                fabShow()
+            }
+            else {
+                fabHide()
+            }
+        }
+        binding.fabAdd.setOnClickListener {
+            fabHide()
+            val view = layoutInflater.inflate(R.layout.add_costumers_modal, null)
             val dialog = AlertDialog.Builder(this)
             dialog.setView(view)
 
@@ -61,10 +77,16 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
             dialog.setPositiveButton("Enter", DialogInterface.OnClickListener { _, _ ->
 
-                writeNewCstumer(getRandomString(5),costName.text.toString(), System.currentTimeMillis().toString(),
-            costPhoneNumber.text.toString(),costTypePhone.text.toString(),costPrice.text.toString())
+                writeNewCstumer(
+                    getRandomString(5),
+                    costName.text.toString(),
+                    System.currentTimeMillis().toString(),
+                    costPhoneNumber.text.toString(),
+                    costTypePhone.text.toString(),
+                    costPrice.text.toString()
+                )
 
-            Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show()
             })
 
             dialog.show()
@@ -91,14 +113,20 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 //        })
 
         // readeing all data
-        database.addValueEventListener(object : ValueEventListener{
+        database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 // delete mutable list of
                 mutableList.clear()
-                for (data in snapshot.children){
+                for (data in snapshot.children) {
                     val dataUsed = data.getValue<Costumers>()
-                    mutableList[data.key.toString()] = Costumers(dataUsed?.costumerName.toString(),dataUsed?.orderDate.toString(),dataUsed?.costumerPhoneNumber.toString()
-                        ,dataUsed?.costumerTypePhone.toString(),dataUsed?.price.toString(),dataUsed?.status.toString())
+                    mutableList[data.key.toString()] = Costumers(
+                        dataUsed?.costumerName.toString(),
+                        dataUsed?.orderDate.toString(),
+                        dataUsed?.costumerPhoneNumber.toString(),
+                        dataUsed?.costumerTypePhone.toString(),
+                        dataUsed?.price.toString(),
+                        dataUsed?.status.toString()
+                    )
 
 //                    Log.d("FireBase", "${data.key.toString()}")
 //                    Log.d("FireBase", "${data.getValue<Costumers>()?.costumerName}")
@@ -118,42 +146,41 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         })
 
 
-
-
     }
 
     fun writeNewCstumer(
-        userId: String?, costumerName:String, orderDate:String,
-        phoneNumber:String, phoneType:String,
+        userId: String?, costumerName: String, orderDate: String,
+        phoneNumber: String, phoneType: String,
         price: String
-    ){
-        val costumer = Costumers(costumerName, orderDate, phoneNumber, phoneType, price,"Waiting List")
+    ) {
+        val costumer =
+            Costumers(costumerName, orderDate, phoneNumber, phoneType, price, "Waiting List")
         if (userId != null) {
             database.child(userId).setValue(costumer)
         }
     }
 
-    fun getRandomString(length: Int) : String {
+    fun getRandomString(length: Int): String {
         val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
         return List(length) { charset.random() }
             .joinToString("")
     }
 
-    fun showPieChart(){
+    fun showPieChart() {
         var entry = ArrayList<PieEntry>()
 
-        entry.add(PieEntry(25f,"Waiting List"))
-        entry.add(PieEntry(10f,"Identifikasi"))
-        entry.add(PieEntry(1f,"Pengerjaan"))
-        entry.add(PieEntry(10f,"Finishing"))
+        entry.add(PieEntry(25f, "Waiting List"))
+        entry.add(PieEntry(10f, "Identifikasi"))
+        entry.add(PieEntry(1f, "Pengerjaan"))
+        entry.add(PieEntry(10f, "Finishing"))
 
 //        binding.pcTaskCount.setNoDataText("Data tidak tersedia")
 
         var dataSet = PieDataSet(entry, "Count Task")
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 3f
-        dataSet.iconsOffset = MPPointF(0f,80f)
+        dataSet.iconsOffset = MPPointF(0f, 80f)
         dataSet.selectionShift = 4f
         dataSet.setDrawValues(true)
         binding.pcTaskCount.animateY(1400, Easing.EaseInOutQuad)
@@ -194,14 +221,14 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         binding.pcTaskCount.invalidate()
     }
 
-    private fun generateCenterSpannableText() : SpannableString {
-        val s = SpannableString("MyTrack Pro\nFarras Ma'ruf")
-        s.setSpan(RelativeSizeSpan(1.2f), 0, 14, 0)
-        s.setSpan(StyleSpan(Typeface.NORMAL), 0, 14, 0)
-        s.setSpan(ForegroundColorSpan(Color.GRAY), 14, s.length - 10, 0)
-        s.setSpan(RelativeSizeSpan(.8f), 14, s.length - 10, 0)
-        s.setSpan(StyleSpan(Typeface.ITALIC), s.length - 10, s.length, 0)
-        s.setSpan(ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length - 10, s.length, 0)
+    private fun generateCenterSpannableText(): SpannableString {
+        val s = SpannableString("MyTrack Pro\nby Madina")
+        s.setSpan(RelativeSizeSpan(1.2f), 0, 12, 0)
+        s.setSpan(StyleSpan(Typeface.NORMAL), 0, 12, 0)
+        s.setSpan(ForegroundColorSpan(Color.GRAY), 12, s.length - 7, 0)
+        s.setSpan(RelativeSizeSpan(.8f), 12, s.length - 7, 0)
+        s.setSpan(StyleSpan(Typeface.ITALIC), s.length - 7, s.length, 0)
+        s.setSpan(ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length - 7, s.length, 0)
         return s
     }
 
@@ -211,5 +238,55 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
     override fun onNothingSelected() {
 
+    }
+
+    private fun fabShow(): Unit {
+        isFabOpen = true
+        binding.fabMenus.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_clear_18))
+
+//        set translation X
+        binding.cardfab.animate().translationX(-resources.getDimension(R.dimen.standar_90))
+
+        val animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+
+                //Change dp to px
+                val myScale = resources.displayMetrics.density
+                var myPx = (60 * interpolatedTime * myScale + 0.5f).toInt()
+
+                //set left margin
+                val paramsMargin: FrameLayout.LayoutParams =
+                    binding.fabAdd.layoutParams as FrameLayout.LayoutParams
+                paramsMargin.setMargins(myPx, 0, 0, 0)
+                binding.fabAdd.layoutParams = paramsMargin
+            }
+        }
+        animation.duration = DURATION_OF_ME.toLong()
+        binding.fabMenus.startAnimation(animation)
+    }
+
+    private fun fabHide ():Unit {
+        isFabOpen = false
+        binding.fabMenus.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_menu_open_24))
+
+
+        val animationClose = object : Animation () {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                //animasi translation x
+                var currentTranslationX = binding.cardfab.translationX - (binding.cardfab.translationX * interpolatedTime)
+                binding.cardfab.animate().translationX(currentTranslationX)
+
+                //set left margin to 0
+                val paramsMargin: FrameLayout.LayoutParams = binding.fabAdd.layoutParams as FrameLayout.LayoutParams
+                // get curent margin left and reduce as iterpolated time
+                var currentMargin = paramsMargin.leftMargin - (paramsMargin.leftMargin * interpolatedTime).toInt()
+                paramsMargin.setMargins(currentMargin,0,0,0)
+                binding.fabAdd.layoutParams = paramsMargin
+                Log.d("fabShow","${currentMargin}")
+            }
+        }
+
+        animationClose.duration = DURATION_OF_ME.toLong()
+        binding.fabMenus.startAnimation(animationClose)
     }
 }
