@@ -1,10 +1,12 @@
 package com.farras.mytrackpro
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
@@ -17,6 +19,7 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.farras.mytrackpro.data.DataStatus
 import com.farras.mytrackpro.databinding.ActivityMainBinding
 import com.farras.mytrackpro.models.Costumers
 import com.farras.mytrackpro.models.Posted
@@ -38,6 +41,7 @@ import com.google.firebase.ktx.Firebase
 private lateinit var binding: ActivityMainBinding
 private lateinit var database: DatabaseReference
 var isFabOpen: Boolean = false
+var isFirstAnime: Boolean = true
 var isBackClick: Boolean = false
 const val DURATION_OF_ME = 300
 
@@ -93,6 +97,29 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
         }
 
+        binding.mcvWaitingList.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("status",DataStatus.WAITING_LIST)
+            startActivity(intent)
+        }
+        binding.mcvIdentify.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("status",DataStatus.IDENTIFICATION)
+            startActivity(intent)
+        }
+        binding.mcvOnProcess.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("status",DataStatus.ON_GOING)
+            startActivity(intent)
+        }
+        binding.mcvOnFinalTouch.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("status",DataStatus.FINAL_TOUCH)
+            startActivity(intent)
+        }
+
+
+
 //        FirebaseDatabase.getInstance("https://mytrackpro-5209b-default-rtdb.asia-southeast1.firebasedatabase.app/" +
 //                "")
 //
@@ -136,7 +163,19 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
                     it.status.equals("Waiting List")
                 }.size.toString())
 
-                showPieChart()
+                // set up data to dashboard
+                val countWaitingList = mutableList.filterValues { it.status.equals(DataStatus.WAITING_LIST) }.size
+                val countIdentify = mutableList.filterValues { it.status.equals(DataStatus.IDENTIFICATION) }.size
+                val countOnProses = mutableList.filterValues { it.status.equals(DataStatus.ON_GOING) }.size
+                val countFinal = mutableList.filterValues { it.status.equals(DataStatus.FINAL_TOUCH) }.size
+
+                binding.jmlOrder.text = mutableList.size.toString()
+                binding.countWl.text = countWaitingList.toString()
+                binding.countIdentify.text = countIdentify.toString()
+                binding.countOnProcess.text = countOnProses.toString()
+                binding.countOnFinish.text = countFinal.toString()
+                showPieChart(countWaitingList,countIdentify,countOnProses,countFinal, isFirstAnime)
+                isFirstAnime = false
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -154,7 +193,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         price: String
     ) {
         val costumer =
-            Costumers(costumerName, orderDate, phoneNumber, phoneType, price, "Waiting List")
+            Costumers(costumerName, orderDate, phoneNumber, phoneType,
+                price, DataStatus.WAITING_LIST,"")
         if (userId != null) {
             database.child(userId).setValue(costumer)
         }
@@ -167,25 +207,29 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
             .joinToString("")
     }
 
-    fun showPieChart() {
+    fun showPieChart(waitingListNumbers:Int, identificationNumbers:Int, onPrecessNumbers:Int, finalTouchNumbers:Int,firstAnim: Boolean = true) {
         var entry = ArrayList<PieEntry>()
 
-        entry.add(PieEntry(25f, "Waiting List"))
-        entry.add(PieEntry(10f, "Identifikasi"))
-        entry.add(PieEntry(1f, "Pengerjaan"))
-        entry.add(PieEntry(10f, "Finishing"))
+        entry.add(PieEntry(waitingListNumbers.toFloat(), "Waiting List"))
+        entry.add(PieEntry(identificationNumbers.toFloat(), "Identification"))
+        entry.add(PieEntry(onPrecessNumbers.toFloat(), "On Processing"))
+        entry.add(PieEntry(finalTouchNumbers.toFloat(), "Final Touch"))
 
 //        binding.pcTaskCount.setNoDataText("Data tidak tersedia")
 
-        var dataSet = PieDataSet(entry, "Count Task")
+        val dataSet = PieDataSet(entry, "Count Task")
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 3f
         dataSet.iconsOffset = MPPointF(0f, 80f)
         dataSet.selectionShift = 4f
         dataSet.setDrawValues(true)
-        binding.pcTaskCount.animateY(1400, Easing.EaseInOutQuad)
+        if (isFirstAnime){
+            binding.pcTaskCount.animateY(1400, Easing.EaseInOutQuad)
+        }
 
-        var arrayListColor = ArrayList<Int>()
+
+
+        val arrayListColor = ArrayList<Int>()
         arrayListColor.add(Color.rgb(32, 214, 214))
         arrayListColor.add(Color.rgb(240, 188, 91))
         arrayListColor.add(Color.rgb(188, 240, 91))
