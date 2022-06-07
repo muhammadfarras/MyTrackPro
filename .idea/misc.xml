@@ -5,12 +5,14 @@
       <map>
         <entry key="app/src/main/res/drawable/card_gradient.xml" value="0.1305" />
         <entry key="app/src/main/res/drawable/ic_baseline_clear_18.xml" value="0.186" />
+        <entry key="app/src/main/res/drawable/oren_gradient.xml" value="0.1295" />
         <entry key="app/src/main/res/font-v26/quicksand.xml" value="0.10364583333333334" />
         <entry key="app/src/main/res/font/font.xml" value="0.22291666666666668" />
         <entry key="app/src/main/res/font/quicksand.xml" value="0.10260416666666666" />
         <entry key="app/src/main/res/layout/activity_list.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_opening.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/list_selection_view_holder.xml" value="0.30142857142857143" />
       </map>
     </option>
   </component>

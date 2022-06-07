@@ -73,6 +73,7 @@
             android:rowCount="1">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_waiting_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -92,10 +93,8 @@
                         android:layout_height="30dp"
                         android:src="@drawable/ic_baseline_access_time_56" />
                     <TextView
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:textSize="7dp"
                         android:text="Waiting List"
                         android:textAlignment="center"
@@ -103,10 +102,9 @@
                         android:textStyle="bold" />
 
                     <TextView
-
+                        android:id="@+id/count_wl"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="-"
                         android:textAlignment="center"
                         android:textColor="@color/white"
@@ -115,7 +113,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_akhwat"
+                android:id="@+id/mcv_identify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -145,9 +143,9 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/count_identify"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="-"
                         android:textAlignment="center"
                         android:textColor="@color/white"
@@ -166,6 +164,7 @@
             android:rowCount="1">
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcv_on_process"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -185,10 +184,8 @@
                         android:layout_height="30dp"
                         android:src="@drawable/ic_baseline_home_repair_service_56" />
                     <TextView
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:textSize="7dp"
                         android:text="Reperation"
                         android:textAlignment="center"
@@ -196,10 +193,9 @@
                         android:textStyle="bold" />
 
                     <TextView
-
+                        android:id="@+id/count_on_process"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="-"
                         android:textAlignment="center"
                         android:textColor="@color/white"
@@ -208,7 +204,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-
+                android:id="@+id/mcv_on_final_touch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -238,9 +234,9 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/count_on_finish"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="-"
                         android:textAlignment="center"
                         android:textColor="@color/white"
