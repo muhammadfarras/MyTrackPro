@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "930940333102",
+    "firebase_url": "https://mytrackpro-5209b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mytrackpro-5209b",
+    "storage_bucket": "mytrackpro-5209b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930940333102:android:53b2c02adbcce862ec03bf",
+        "android_client_info": {
+          "package_name": "com.farras.mytrackpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930940333102-f5bi8mmbaed4rq0oafqktek3rjlhophm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiAaWfgGMtN4SynUeijx9JzruHb5oYvwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930940333102-f5bi8mmbaed4rq0oafqktek3rjlhophm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

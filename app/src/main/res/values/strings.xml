@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyTrackPro</string>
+    <string name="developer" translatable="false">Muhammad Farras Ma\'ruf</string>
 </resources>
