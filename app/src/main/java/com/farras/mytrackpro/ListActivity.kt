@@ -43,7 +43,8 @@ class ListActivity : AppCompatActivity() {
                         dataUsed?.costumerPhoneNumber.toString(),
                         dataUsed?.costumerTypePhone.toString(),
                         dataUsed?.price.toString(),
-                        dataUsed?.status.toString()
+                        dataUsed?.status.toString(),
+                        dataUsed?.notes.toString()
                     ))
                 }
                 when (intent!!.getStringExtra("status")){
@@ -51,6 +52,7 @@ class ListActivity : AppCompatActivity() {
                     DataStatus.IDENTIFICATION -> dataMap = list.filter { it.status.equals(DataStatus.IDENTIFICATION)}
                     DataStatus.ON_GOING -> dataMap = list.filter { it.status.equals(DataStatus.ON_GOING)}
                     DataStatus.FINAL_TOUCH -> dataMap = list.filter { it.status.equals(DataStatus.FINAL_TOUCH)}
+                    DataStatus.ALL -> dataMap = list // List aja
 
                 }
 

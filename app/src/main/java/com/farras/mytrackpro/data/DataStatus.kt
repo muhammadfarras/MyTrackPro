@@ -6,5 +6,6 @@ class DataStatus {
         val IDENTIFICATION = "IDENTIFICATION"
         val ON_GOING = "ON_GOING"
         val FINAL_TOUCH = "FINAL_TOUCH"
+        val ALL = "ALL"
     }
 }

@@ -1,5 +1,6 @@
 package com.farras.mytrackpro.adapter
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,35 +24,27 @@ class ListSelectionRecyclerViewAdapter(var data:List<Costumers>): RecyclerView.A
         return ListSelectionViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: ListSelectionViewHolder, position: Int) {
-//        holder.testNama.text = data.get(position).costumerNam/e
-        holder.costuserName.text = data.get(position).costumerName
+        holder.costuserName.text = "${data[position].costumerName} | ${data[position].status}"
 
 //        Koreksi tipe date
-//        holder.costumerDate.text = stringtoDate()
-        holder.costumerTypePhone.text = data.get(position).costumerTypePhone
-        holder.costumerProblemStatus.text = data.get(position).notes
-        holder.costumerPrice.text = data.get(position).price
-//        Log.d("MYFRUS", "${data.get(position).costumerName}")
+        val formatedDate = data[position].orderDate?.let { dateFormatter(it) }
+        holder.costumerDate.text = formatedDate
+        holder.costumerTypePhone.text = data[position].costumerTypePhone
+        holder.costumerProblemStatus.text = data[position].notes
+        holder.costumerPrice.text = data[position].price
+        Log.d("MYFRUS", "${data[position]}")
     }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-
-    fun stringtoDate(dates: String): Date {
-        val sdf = SimpleDateFormat("EEE, MMM dd yyyy",
-            Locale.ENGLISH)
-        var date: Date? = null
-        try {
-            date = sdf.parse(dates)
-            println(date)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-        return date!!
+    @SuppressLint("SimpleDateFormat")
+    fun dateFormatter(milliseconds: String): String {
+        return SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Date(milliseconds.toLong())).toString()
     }
 
 

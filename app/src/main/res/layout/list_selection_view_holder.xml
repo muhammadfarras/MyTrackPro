@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
+        app:cardElevation="2dp"
         android:layout_margin="7dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -130,14 +130,14 @@
                         android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/oren_gradient"
-                        android:orientation="vertical"
+                        android:background="@drawable/gray_gradient"
+                        android:orientation="horizontal"
                         android:padding="2dp">
 
                         <ImageView
-                            android:layout_gravity="center"
-                            android:layout_width="150dp"
-                            android:layout_height="30dp"
+                            android:layout_width="30dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="left|center_vertical"
                             android:src="@drawable/ic_baseline_monetization_on_56" />
 
                         <TextView
@@ -146,8 +146,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="-"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/black"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

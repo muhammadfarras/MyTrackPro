@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
                 fabHide()
             }
         }
+
+        // add status
         binding.fabAdd.setOnClickListener {
             fabHide()
             val view = layoutInflater.inflate(R.layout.add_costumers_modal, null)
@@ -92,9 +94,14 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
                 Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show()
             })
-
             dialog.show()
+        }
 
+        // show all status
+        binding.fabList.setOnClickListener {
+            val intent = Intent(this, ListActivity::class.java)
+            intent.putExtra("status", DataStatus.ALL)
+            startActivity(intent)
         }
 
         binding.mcvWaitingList.setOnClickListener {
