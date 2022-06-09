@@ -1,5 +1,6 @@
 package com.farras.mytrackpro
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.farras.mytrackpro.adapter.ListSelectionRecyclerViewAdapter
@@ -16,12 +18,12 @@ import com.farras.mytrackpro.data.DataStatus
 import com.farras.mytrackpro.databinding.ActivityMainBinding
 import com.farras.mytrackpro.models.Costumers
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
@@ -53,6 +55,10 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
         val mutableList = mutableMapOf<String, Costumers>()
         val realMutableList = mutableListOf<Costumers>()
+
+
+        showBarChart()
+
 
         // readeing all data
         database.addValueEventListener(object : ValueEventListener {
@@ -89,16 +95,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
                 Log.d("FIREBASE MAP", mutableList.filterValues {
                     it.status.equals("Waiting List")
                 }.size.toString())
-
-                // set up data to dashboard
-                val countWaitingList = mutableList.filterValues { it.status.equals(DataStatus.WAITING_LIST) }.size
-                val countIdentify = mutableList.filterValues { it.status.equals(DataStatus.IDENTIFICATION) }.size
-                val countOnProses = mutableList.filterValues { it.status.equals(DataStatus.ON_GOING) }.size
-                val countFinal = mutableList.filterValues { it.status.equals(DataStatus.FINAL_TOUCH) }.size
-
-                binding.jmlOrder.text = mutableList.size.toString()
-                showBarChart(countWaitingList,countIdentify,countOnProses,countFinal, isFirstAnime)
-                isFirstAnime = false
                 recyclerView.adapter = ListSelectionRecyclerViewAdapter (realMutableList)
             }
 
@@ -133,18 +129,46 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
             .joinToString("")
     }
 
-    fun showBarChart(waitingListNumbers:Int, identificationNumbers:Int, onPrecessNumbers:Int, finalTouchNumbers:Int, firstAnim: Boolean = true) {
+    fun showBarChart() {
         // instance bar chart
         binding.bcTaskCount.setDrawBarShadow(false)
-        binding.bcTaskCount.setDrawBarShadow(true)
         binding.bcTaskCount.description.isEnabled = false
+        val daysOnWeek = listOf<String>("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
 
         // maksimum entries
         binding.bcTaskCount.setMaxVisibleValueCount(60)
-
-        binding.bcTaskCount.setPinchZoom(false)
+        binding.bcTaskCount.setBackgroundColor(Color.WHITE)
+        binding.bcTaskCount.setGridBackgroundColor(Color.WHITE)
+        binding.bcTaskCount.isDoubleTapToZoomEnabled = false
         binding.bcTaskCount.setDrawGridBackground(false)
+        binding.bcTaskCount.setPinchZoom(false)
+        binding.bcTaskCount.setDrawBorders(false)
+        binding.bcTaskCount.xAxis.setDrawAxisLine(false)
+        binding.bcTaskCount.xAxis.setDrawGridLines(false)
+        binding.bcTaskCount.xAxis.setDrawLimitLinesBehindData(false)
+        binding.bcTaskCount.axisLeft.isEnabled = false
+        binding.bcTaskCount.axisRight.isEnabled = false
+        binding.bcTaskCount.axisLeft.axisMinimum = 0f
+        binding.bcTaskCount.xAxis.valueFormatter = IndexAxisValueFormatter(daysOnWeek)
+        binding.bcTaskCount.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        binding.bcTaskCount.legend.isEnabled = false
+        // create value
+        val values = arrayListOf<BarEntry>(
+            BarEntry(0f,19f),
+            BarEntry(1f,22f),
+            BarEntry(2f,18f),
+            BarEntry(3f,23f),
+            BarEntry(4f,19f),
+            BarEntry(5f,20f),
+            BarEntry(6f,17f),
+        )
 
+        val set1 = BarDataSet(values,"")
+        val dataSets = arrayListOf<IBarDataSet>()
+        dataSets.add(set1)
+        val barData = BarData(dataSets)
+        barData.barWidth = 0.7f
+        binding.bcTaskCount.data = barData
     }
 
     private fun generateCenterSpannableText(): SpannableString {
