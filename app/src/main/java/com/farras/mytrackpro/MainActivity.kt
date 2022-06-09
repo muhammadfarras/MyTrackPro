@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
                 Log.d("FIREBASE MAP", mutableList.filterValues {
                     it.status.equals("Waiting List")
                 }.size.toString())
-                recyclerView.adapter = ListSelectionRecyclerViewAdapter (realMutableList)
+                recyclerView.adapter = ListSelectionRecyclerViewAdapter (realMutableList, applicationContext)
             }
 
             override fun onCancelled(error: DatabaseError) {
