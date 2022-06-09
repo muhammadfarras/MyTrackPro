@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#FFFFFF"
+    android:background="@color/teal_700"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -42,9 +42,9 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-        <com.github.mikephil.charting.charts.PieChart
+        <com.github.mikephil.charting.charts.BarChart
             android:layout_margin="20dp"
-            android:id="@+id/pc_task_count"
+            android:id="@+id/bc_task_count"
             android:layout_width="match_parent"
             android:layout_height="250dp" />
 
@@ -65,233 +65,11 @@
             android:layout_height="1dp"
             android:background="#B4B8B8B8"/>
 
-        <GridLayout
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="1">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_waiting_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_gradient"
-                    android:orientation="vertical"
-                    android:padding="2dp">
-
-                    <ImageView
-                        android:layout_width="150dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_baseline_access_time_56" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="7dp"
-                        android:text="Waiting List"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/count_wl"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_identify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_gradient"
-                    android:orientation="vertical"
-                    android:padding="2dp">
-
-                    <ImageView
-                        android:layout_width="150dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_baseline_help_outline_56" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:textSize="7dp"
-                        android:text="Identifikasi Kerusakan"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/count_identify"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </GridLayout>
-
-
-
-        <GridLayout
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="1">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_on_process"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_gradient"
-                    android:orientation="vertical"
-                    android:padding="2dp">
-
-                    <ImageView
-                        android:layout_width="150dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_baseline_home_repair_service_56" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="7dp"
-                        android:text="Reperation"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/count_on_process"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_on_final_touch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="3dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_gradient"
-                    android:orientation="vertical"
-                    android:padding="2dp">
-
-                    <ImageView
-                        android:layout_width="150dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_baseline_done_outline_56" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        android:textSize="7dp"
-                        android:text="Final Touch"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/count_on_finish"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="-"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </GridLayout>
-    </LinearLayout>
-
-
-
-    <androidx.cardview.widget.CardView
-        app:cardCornerRadius="25dp"
-        android:id="@+id/cardfab"
-        app:layout_anchor="@id/fabMenus"
-        app:layout_anchorGravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <FrameLayout
-            android:padding="5dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_margin="12dp"
+            android:layout_weight="1"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabList"
-                app:borderWidth="0dp"
-                app:elevation="0dp"
-                app:fabSize="mini"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_anchorGravity="center"
-                app:srcCompat="@drawable/ic_baseline_list_24" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                app:elevation="0dp"
-                android:id="@+id/fabAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:borderWidth="0dp"
-                app:fabSize="mini"
-                app:layout_anchorGravity="center"
-                app:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
-        </FrameLayout>
-    </androidx.cardview.widget.CardView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_gravity="bottom|end"
-        android:scaleType="center"
-        app:fabCustomSize="@dimen/standar_60"
-        android:id="@+id/fabMenus"
-        android:layout_margin="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_baseline_menu_open_24" />
-
-
+            android:layout_height="0dp" />
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

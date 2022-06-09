@@ -1,28 +1,20 @@
 package com.farras.mytrackpro
 
-import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
-import android.view.animation.Animation
-import android.view.animation.Transformation
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.farras.mytrackpro.adapter.ListSelectionRecyclerViewAdapter
 import com.farras.mytrackpro.data.DataStatus
 import com.farras.mytrackpro.databinding.ActivityMainBinding
 import com.farras.mytrackpro.models.Costumers
-import com.farras.mytrackpro.models.Posted
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -42,7 +34,7 @@ private lateinit var binding: ActivityMainBinding
 private lateinit var database: DatabaseReference
 var isFabOpen: Boolean = false
 var isFirstAnime: Boolean = true
-var isBackClick: Boolean = false
+lateinit var recyclerView: RecyclerView
 const val DURATION_OF_ME = 300
 
 class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
@@ -52,99 +44,15 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         val view = binding.root
         setContentView(view)
 
+        recyclerView = binding.recyclerView
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
         // Setup firebase database
         FirebaseDatabase.getInstance("https://mytrackpro-5209b-default-rtdb.asia-southeast1.firebasedatabase.app/")
         database = Firebase.database.getReference("costumers")
 
-        var mutableList = mutableMapOf<String, Costumers>()
-
-
-        binding.fabMenus.setOnClickListener {
-            if (!isFabOpen){
-                fabShow()
-            }
-            else {
-                fabHide()
-            }
-        }
-
-        // add status
-        binding.fabAdd.setOnClickListener {
-            fabHide()
-            val view = layoutInflater.inflate(R.layout.add_costumers_modal, null)
-            val dialog = AlertDialog.Builder(this)
-            dialog.setView(view)
-
-            val costName = view.findViewById<EditText>(R.id.costumer_name)
-            val costPhoneNumber = view.findViewById<EditText>(R.id.costumerPhoneNumber)
-            val costTypePhone = view.findViewById<EditText>(R.id.costumerTypePhone)
-            val costPrice = view.findViewById<EditText>(R.id.costumerPrice)
-
-
-            dialog.setPositiveButton("Enter", DialogInterface.OnClickListener { _, _ ->
-
-                writeNewCstumer(
-                    getRandomString(5),
-                    costName.text.toString(),
-                    System.currentTimeMillis().toString(),
-                    costPhoneNumber.text.toString(),
-                    costTypePhone.text.toString(),
-                    costPrice.text.toString()
-                )
-
-                Toast.makeText(this, "Updated", Toast.LENGTH_LONG).show()
-            })
-            dialog.show()
-        }
-
-        // show all status
-        binding.fabList.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("status", DataStatus.ALL)
-            startActivity(intent)
-        }
-
-        binding.mcvWaitingList.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("status",DataStatus.WAITING_LIST)
-            startActivity(intent)
-        }
-        binding.mcvIdentify.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("status",DataStatus.IDENTIFICATION)
-            startActivity(intent)
-        }
-        binding.mcvOnProcess.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("status",DataStatus.ON_GOING)
-            startActivity(intent)
-        }
-        binding.mcvOnFinalTouch.setOnClickListener {
-            val intent = Intent(this, ListActivity::class.java)
-            intent.putExtra("status",DataStatus.FINAL_TOUCH)
-            startActivity(intent)
-        }
-
-
-
-//        FirebaseDatabase.getInstance("https://mytrackpro-5209b-default-rtdb.asia-southeast1.firebasedatabase.app/" +
-//                "")
-//
-//        database = Firebase.database.getReference("costumers")
-//
-//        val key= database.push().key
-
-//        database.child("Jun2").addValueEventListener(object: ValueEventListener{
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                var user = snapshot.getValue<Costumers>()
-//                Log.d("FireBase", "${user?.orderDate} - ${user?.costumerTypePhone}")
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//
-//            }
-//
-//        })
+        val mutableList = mutableMapOf<String, Costumers>()
+        val realMutableList = mutableListOf<Costumers>()
 
         // readeing all data
         database.addValueEventListener(object : ValueEventListener {
@@ -162,6 +70,18 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
                         dataUsed?.status.toString()
                     )
 
+                    realMutableList.add(Costumers(
+                        dataUsed?.costumerName.toString(),
+                        dataUsed?.orderDate.toString(),
+                        dataUsed?.costumerPhoneNumber.toString(),
+                        dataUsed?.costumerTypePhone.toString(),
+                        dataUsed?.price.toString(),
+                        dataUsed?.status.toString(),
+                        dataUsed?.notes.toString()
+                    )
+
+                    )
+
 //                    Log.d("FireBase", "${data.key.toString()}")
 //                    Log.d("FireBase", "${data.getValue<Costumers>()?.costumerName}")
                 }
@@ -177,12 +97,9 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
                 val countFinal = mutableList.filterValues { it.status.equals(DataStatus.FINAL_TOUCH) }.size
 
                 binding.jmlOrder.text = mutableList.size.toString()
-                binding.countWl.text = countWaitingList.toString()
-                binding.countIdentify.text = countIdentify.toString()
-                binding.countOnProcess.text = countOnProses.toString()
-                binding.countOnFinish.text = countFinal.toString()
-                showPieChart(countWaitingList,countIdentify,countOnProses,countFinal, isFirstAnime)
+                showBarChart(countWaitingList,countIdentify,countOnProses,countFinal, isFirstAnime)
                 isFirstAnime = false
+                recyclerView.adapter = ListSelectionRecyclerViewAdapter (realMutableList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -190,6 +107,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
             }
 
         })
+
+
 
 
     }
@@ -214,62 +133,18 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
             .joinToString("")
     }
 
-    fun showPieChart(waitingListNumbers:Int, identificationNumbers:Int, onPrecessNumbers:Int, finalTouchNumbers:Int,firstAnim: Boolean = true) {
-        var entry = ArrayList<PieEntry>()
+    fun showBarChart(waitingListNumbers:Int, identificationNumbers:Int, onPrecessNumbers:Int, finalTouchNumbers:Int, firstAnim: Boolean = true) {
+        // instance bar chart
+        binding.bcTaskCount.setDrawBarShadow(false)
+        binding.bcTaskCount.setDrawBarShadow(true)
+        binding.bcTaskCount.description.isEnabled = false
 
-        entry.add(PieEntry(waitingListNumbers.toFloat(), "Waiting List"))
-        entry.add(PieEntry(identificationNumbers.toFloat(), "Identification"))
-        entry.add(PieEntry(onPrecessNumbers.toFloat(), "On Processing"))
-        entry.add(PieEntry(finalTouchNumbers.toFloat(), "Final Touch"))
+        // maksimum entries
+        binding.bcTaskCount.setMaxVisibleValueCount(60)
 
-//        binding.pcTaskCount.setNoDataText("Data tidak tersedia")
+        binding.bcTaskCount.setPinchZoom(false)
+        binding.bcTaskCount.setDrawGridBackground(false)
 
-        val dataSet = PieDataSet(entry, "Count Task")
-        dataSet.setDrawIcons(false)
-        dataSet.sliceSpace = 3f
-        dataSet.iconsOffset = MPPointF(0f, 80f)
-        dataSet.selectionShift = 4f
-        dataSet.setDrawValues(true)
-        if (isFirstAnime){
-            binding.pcTaskCount.animateY(1400, Easing.EaseInOutQuad)
-        }
-
-
-
-        val arrayListColor = ArrayList<Int>()
-        arrayListColor.add(Color.rgb(32, 214, 214))
-        arrayListColor.add(Color.rgb(240, 188, 91))
-        arrayListColor.add(Color.rgb(188, 240, 91))
-        arrayListColor.add(Color.rgb(214, 32, 214))
-        dataSet.colors = arrayListColor
-
-        var data = PieData(dataSet)
-        data.setValueFormatter(PercentFormatter(binding.pcTaskCount))
-
-        data.setValueTextSize(11f)
-        data.setValueTextColor(Color.WHITE)
-
-        binding.pcTaskCount.data = data
-
-        binding.pcTaskCount.setUsePercentValues(true)
-        binding.pcTaskCount.setTransparentCircleColor(Color.WHITE)
-        binding.pcTaskCount.setTransparentCircleAlpha(110)
-        binding.pcTaskCount.transparentCircleRadius = 61f
-
-        binding.pcTaskCount.centerText = generateCenterSpannableText()
-
-        binding.pcTaskCount.holeRadius = 50f
-        binding.pcTaskCount.transparentCircleRadius = 60f
-
-        binding.pcTaskCount.setDrawCenterText(true)
-        binding.pcTaskCount.rotationAngle = 0f
-        binding.pcTaskCount.isRotationEnabled = true
-
-
-        var legend = binding.pcTaskCount.legend
-        legend.isEnabled = false
-        binding.pcTaskCount.highlightValue(null)
-        binding.pcTaskCount.invalidate()
     }
 
     private fun generateCenterSpannableText(): SpannableString {
@@ -291,53 +166,4 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
     }
 
-    private fun fabShow(): Unit {
-        isFabOpen = true
-        binding.fabMenus.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_clear_18))
-
-//        set translation X
-        binding.cardfab.animate().translationX(-resources.getDimension(R.dimen.standar_90))
-
-        val animation = object : Animation() {
-            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-
-                //Change dp to px
-                val myScale = resources.displayMetrics.density
-                var myPx = (60 * interpolatedTime * myScale + 0.5f).toInt()
-
-                //set left margin
-                val paramsMargin: FrameLayout.LayoutParams =
-                    binding.fabAdd.layoutParams as FrameLayout.LayoutParams
-                paramsMargin.setMargins(myPx, 0, 0, 0)
-                binding.fabAdd.layoutParams = paramsMargin
-            }
-        }
-        animation.duration = DURATION_OF_ME.toLong()
-        binding.fabMenus.startAnimation(animation)
-    }
-
-    private fun fabHide ():Unit {
-        isFabOpen = false
-        binding.fabMenus.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_baseline_menu_open_24))
-
-
-        val animationClose = object : Animation () {
-            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                //animasi translation x
-                var currentTranslationX = binding.cardfab.translationX - (binding.cardfab.translationX * interpolatedTime)
-                binding.cardfab.animate().translationX(currentTranslationX)
-
-                //set left margin to 0
-                val paramsMargin: FrameLayout.LayoutParams = binding.fabAdd.layoutParams as FrameLayout.LayoutParams
-                // get curent margin left and reduce as iterpolated time
-                var currentMargin = paramsMargin.leftMargin - (paramsMargin.leftMargin * interpolatedTime).toInt()
-                paramsMargin.setMargins(currentMargin,0,0,0)
-                binding.fabAdd.layoutParams = paramsMargin
-                Log.d("fabShow","${currentMargin}")
-            }
-        }
-
-        animationClose.duration = DURATION_OF_ME.toLong()
-        binding.fabMenus.startAnimation(animationClose)
-    }
 }
