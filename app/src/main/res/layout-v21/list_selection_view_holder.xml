@@ -15,7 +15,7 @@
         >
 
         <TextView
-
+            android:id="@+id/rvh_custumer_id"
             android:maxWidth="40dp"
             android:minWidth="40dp"
             android:layout_width="wrap_content"
@@ -41,14 +41,16 @@
             android:textSize="12sp"/>
 
         <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/teal_200"
             android:id="@+id/mcv_waiting_list"
-            android:layout_width="70dp"
+            android:layout_width="62dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             app:cardCornerRadius="8dp"
             app:cardElevation="3dp">
 
             <LinearLayout
+                android:id="@+id/card_costumer_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_gradient"
@@ -56,11 +58,12 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:maxWidth="70dp"
-                    android:minWidth="70dp"
+
                     android:id="@+id/rvh_costumer_problem_status"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxWidth="70dp"
+                    android:minWidth="70dp"
                     android:text="Waiting List"
                     android:textAlignment="center"
                     android:textColor="@color/white"

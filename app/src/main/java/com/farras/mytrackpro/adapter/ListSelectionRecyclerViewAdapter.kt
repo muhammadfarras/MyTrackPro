@@ -36,26 +36,26 @@ class ListSelectionRecyclerViewAdapter(var data:List<Costumers>, var context:Con
 
 //        Koreksi tipe date
         holder.costumerProblemStatus.text = data[position].status
+        holder.costumerId.text = "# ${data[position].orderId}"
 
         // change drawable
         when (data[position].status){
           DataStatus.WAITING_LIST -> holder.cardCostumerStatus.background =
-              ContextCompat.getDrawable(context, R.drawable.waiting_list_grad)
+              ContextCompat.getDrawable(this.context, R.drawable.waiting_list_grad)
           
-//            DataStatus.IDENTIFICATION -> {
-//                holder.cardCostumerStatus.background =
-//                    ContextCompat.getDrawable(context, R.drawable.identification_gradient)
-//            }
-//            DataStatus.ON_GOING -> {
-//                holder.cardCostumerStatus.background =
-//                    ContextCompat.getDrawable(context, R.drawable.on_progress_grandient)
-//            }
-//            DataStatus.FINAL_TOUCH -> {holder.cardCostumerStatus.background =
-//            ContextCompat.getDrawable(context,R.drawable.finisih_gradient)}
+            DataStatus.IDENTIFICATION -> {
+                holder.cardCostumerStatus.background =
+                    ContextCompat.getDrawable(context, R.drawable.identification_gradient)
+            }
+            DataStatus.ON_GOING -> {
+                holder.cardCostumerStatus.background =
+                    ContextCompat.getDrawable(context, R.drawable.on_progress_grandient)
+            }
+            DataStatus.FINAL_TOUCH -> {holder.cardCostumerStatus.background =
+            ContextCompat.getDrawable(context,R.drawable.finisih_gradient)}
         }
         holder.costumerPrice.text = data[position].price?.toDouble()?.let { formatRupiah(it) }
 
-        Log.d("CHECK FORMATER","")
     }
 
     override fun getItemCount(): Int {
@@ -83,5 +83,6 @@ class ListSelectionViewHolder(var view:View): RecyclerView.ViewHolder(view) {
     val costumerProblemStatus = view.findViewById<TextView>(R.id.rvh_costumer_problem_status)
     val costumerPrice = view.findViewById<TextView>(R.id.rvh_costumer_cost)
     val cardCostumerStatus = view.findViewById<LinearLayout>(R.id.card_costumer_status)
+    val costumerId = view.findViewById<TextView>(R.id.rvh_custumer_id)
 
 }

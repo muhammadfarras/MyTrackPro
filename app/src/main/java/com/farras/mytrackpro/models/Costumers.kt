@@ -11,5 +11,6 @@ data class Costumers(
     var costumerTypePhone:String?="",
     var price:String?="",
     var status:String?="",
-    var notes:String?=""
+    var notes:String?="",
+    var orderId:String?=""
 )

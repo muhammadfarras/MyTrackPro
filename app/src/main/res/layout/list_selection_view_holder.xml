@@ -41,6 +41,7 @@
             android:textSize="12sp"/>
 
         <com.google.android.material.card.MaterialCardView
+            app:cardBackgroundColor="@color/teal_200"
             android:id="@+id/mcv_waiting_list"
             android:layout_width="62dp"
             android:layout_height="wrap_content"

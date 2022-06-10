@@ -1,32 +1,20 @@
 package com.farras.mytrackpro
 
-import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.farras.mytrackpro.adapter.ListSelectionRecyclerViewAdapter
-import com.farras.mytrackpro.data.DataStatus
 import com.farras.mytrackpro.databinding.ActivityMainBinding
 import com.farras.mytrackpro.models.Costumers
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.github.mikephil.charting.utils.ColorTemplate
-import com.github.mikephil.charting.utils.MPPointF
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -34,10 +22,7 @@ import com.google.firebase.ktx.Firebase
 
 private lateinit var binding: ActivityMainBinding
 private lateinit var database: DatabaseReference
-var isFabOpen: Boolean = false
-var isFirstAnime: Boolean = true
 lateinit var recyclerView: RecyclerView
-const val DURATION_OF_ME = 300
 
 class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,72 +46,10 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
 
         // readeing all data
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // delete mutable list of
-                mutableList.clear()
-                for (data in snapshot.children) {
-                    val dataUsed = data.getValue<Costumers>()
-                    mutableList[data.key.toString()] = Costumers(
-                        dataUsed?.costumerName.toString(),
-                        dataUsed?.orderDate.toString(),
-                        dataUsed?.costumerPhoneNumber.toString(),
-                        dataUsed?.costumerTypePhone.toString(),
-                        dataUsed?.price.toString(),
-                        dataUsed?.status.toString()
-                    )
-
-                    realMutableList.add(Costumers(
-                        dataUsed?.costumerName.toString(),
-                        dataUsed?.orderDate.toString(),
-                        dataUsed?.costumerPhoneNumber.toString(),
-                        dataUsed?.costumerTypePhone.toString(),
-                        dataUsed?.price.toString(),
-                        dataUsed?.status.toString(),
-                        dataUsed?.notes.toString()
-                    )
-
-                    )
-
-//                    Log.d("FireBase", "${data.key.toString()}")
-//                    Log.d("FireBase", "${data.getValue<Costumers>()?.costumerName}")
-                }
-
-                Log.d("FIREBASE MAP", mutableList.filterValues {
-                    it.status.equals("Waiting List")
-                }.size.toString())
-                recyclerView.adapter = ListSelectionRecyclerViewAdapter (realMutableList, applicationContext)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-
-
-
-
-    }
-
-    fun writeNewCstumer(
-        userId: String?, costumerName: String, orderDate: String,
-        phoneNumber: String, phoneType: String,
-        price: String
-    ) {
-        val costumer =
-            Costumers(costumerName, orderDate, phoneNumber, phoneType,
-                price, DataStatus.WAITING_LIST,"")
-        if (userId != null) {
-            database.child(userId).setValue(costumer)
+        recyclerViewShow(mutableList,realMutableList)
+        binding.btnSearch.setOnClickListener {
+            recyclerViewShow(mutableList,realMutableList,binding.etSearch.text.toString())
         }
-    }
-
-    fun getRandomString(length: Int): String {
-        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-
-        return List(length) { charset.random() }
-            .joinToString("")
     }
 
     fun showBarChart() {
@@ -171,16 +94,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
         binding.bcTaskCount.data = barData
     }
 
-    private fun generateCenterSpannableText(): SpannableString {
-        val s = SpannableString("MyTrack Pro\nby Madina")
-        s.setSpan(RelativeSizeSpan(1.2f), 0, 12, 0)
-        s.setSpan(StyleSpan(Typeface.NORMAL), 0, 12, 0)
-        s.setSpan(ForegroundColorSpan(Color.GRAY), 12, s.length - 7, 0)
-        s.setSpan(RelativeSizeSpan(.8f), 12, s.length - 7, 0)
-        s.setSpan(StyleSpan(Typeface.ITALIC), s.length - 7, s.length, 0)
-        s.setSpan(ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length - 7, s.length, 0)
-        return s
-    }
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {
 
@@ -188,6 +101,55 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener {
 
     override fun onNothingSelected() {
 
+    }
+
+    fun recyclerViewShow(mutableList: MutableMap<String,Costumers>, realMutableList:MutableList<Costumers>, findText:String = ""){
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // delete mutable list of
+                mutableList.clear()
+                realMutableList.clear()
+                for (data in snapshot.children) {
+                    val dataUsed = data.getValue<Costumers>()
+                    mutableList[data.key.toString()] = Costumers(
+                        dataUsed?.costumerName.toString(),
+                        dataUsed?.orderDate.toString(),
+                        dataUsed?.costumerPhoneNumber.toString(),
+                        dataUsed?.costumerTypePhone.toString(),
+                        dataUsed?.price.toString(),
+                        dataUsed?.status.toString(),
+                        dataUsed?.orderId.toString()
+                    )
+
+                    realMutableList.add(Costumers(
+                        dataUsed?.costumerName.toString(),
+                        dataUsed?.orderDate.toString(),
+                        dataUsed?.costumerPhoneNumber.toString(),
+                        dataUsed?.costumerTypePhone.toString(),
+                        dataUsed?.price.toString(),
+                        dataUsed?.status.toString(),
+                        dataUsed?.notes.toString(),
+                        dataUsed?.orderId.toString()
+                    ))
+                }
+                Log.d("FIREBASE MAP", mutableList.filterValues {
+                    it.status.equals("Waiting List")
+                }.size.toString())
+
+
+                if (findText == ""){
+                    recyclerView.adapter = ListSelectionRecyclerViewAdapter (realMutableList, applicationContext)
+                }
+                else {
+                    val filterReal = realMutableList.filter{
+                        it.costumerName!!.contains(findText)
+                    }
+                    recyclerView.adapter = ListSelectionRecyclerViewAdapter (filterReal, applicationContext)
+                }
+
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
 }
